@@ -1,0 +1,12 @@
+	12
+Name	Greer, Tamara
+Score	60
+Used External Libraries?	Note for future assignments: ['metrics', 'preprocessing', 'model_selection'] are considered external libraries. Only sklearn DecisionTree was supposed to be used. Anything else can be coded using core Python libraries itself.
+Text Submissions	All Good
+System Line Good?	All Good
+SBD All Good?	Penalty applied: -4, Reason: Almost Complete - File processing errors, algorithm good
+Colloc All Good?	Penalty applied: -6, Reason: Complete, unverified ouput Chi-square for full dataset
+.py File Good?	No comments.
+Explanation Good?	No comments.
+Screenshots Added?	No comments.
+Output File Present	No comments.

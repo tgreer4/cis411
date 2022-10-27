@@ -1,0 +1,114 @@
+import sys, re
+import pandas as pd
+import numpy as np
+from sklearn.tree import DecisionTreeClassifier
+from sklearn import tree
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import GridSearchCV
+
+
+f = open(sys.argv[1])
+features, df = [], pd.DataFrame(columns=['id', 'L_word', 'R_word', 'L_word_len3', 
+                                         'L_cap', 'R_cap', 'L_dist', 'R_dist', 'udist', 'label'])
+regexp = re.compile(r'\w\.$')
+lst = list(map(lambda line: line.split(), f.readlines()))
+for line in lst:
+    if regexp.search(line[1]):
+        label = line[2]
+        R_word, L_word = '', ''
+        L_word = line[1][:len(line[1])-1]
+        L_word_len3 = len(L_word) < 3
+        i = lst.index(line) + 1
+        if i >= len(lst):
+            break
+        while not (lst[i][1] > '?'):
+            i += 1
+        else:
+            R_word = lst[i][1]
+            i = lst.index(line) + 1
+        L_cap = L_word.lower() == L_word
+        R_cap = R_word.lower() == R_word
+        l, r, d = 0, 0, int(line[0])
+        if len(features) < 2:
+            pass
+        else:
+            l = features[len(features)-1][0]
+        while not (lst[i][2] == 'EOS'):
+            i += 1
+        else:
+            r = int(lst[i][0])
+        Ldist, Rdist = d - l, r - d
+        udist = (Ldist + Rdist)/2
+        features.append([int(line[0]), L_word, R_word, L_word_len3, L_cap,
+                            R_cap, Ldist, Rdist, udist])
+        df.loc[len(df)] = [int(line[0]), L_word, R_word, L_word_len3, L_cap,
+                            R_cap, Ldist, Rdist, udist, line[2]]
+
+df = df[['L_word_len3', 'L_cap', 'R_cap', 'L_dist', 'R_dist', 'udist', 'label']]
+df['L_word_len3'] = pd.Categorical(df.L_word_len3).codes
+df['L_cap'] = pd.Categorical(df.L_cap).codes
+df['R_cap'] = pd.Categorical(df.R_cap).codes
+df['label'] = pd.Categorical(df.label).codes
+y = df.pop('label')
+X = df
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state = 100)
+
+clf = DecisionTreeClassifier()
+clf.fit(X_train, y_train)
+
+# print("Decision Tree without Optimization")
+# tree.plot_tree(clf)
+
+predictions = clf.predict(X_test)
+print("Jaccard score:", accuracy_score(y_test, predictions))
+
+f = open(sys.argv[2])
+
+features, df = [], pd.DataFrame(columns=['id', 'L_word', 'R_word', 'L_word_len3', 
+                                         'L_cap', 'R_cap', 'L_dist', 'R_dist', 'udist', 'label'])
+
+lst = list(map(lambda line: line.split(), f.readlines()))
+for line in lst:
+    if regexp.search(line[1]):
+        label = line[2]
+        R_word, L_word = '', ''
+        L_word = line[1][:len(line[1])-1]
+        L_word_len3 = len(L_word) < 3
+        i = lst.index(line) + 1
+        if i >= len(lst):
+            break
+        while not (lst[i][1] > '?'):
+            i += 1
+        else:
+            R_word = lst[i][1]
+            i = lst.index(line) + 1
+        L_cap = L_word.lower() == L_word
+        R_cap = R_word.lower() == R_word
+        l, r, d = 0, 0, int(line[0])
+        if len(features) < 2:
+            pass
+        else:
+            l = features[len(features)-1][0]
+        while not (lst[i][2] == 'EOS'):
+            i += 1
+        else:
+            r = int(lst[i][0])
+        Ldist, Rdist = d - l, r - d
+        udist = (Ldist + Rdist)/2
+        features.append([int(line[0]), L_word, R_word, L_word_len3, L_cap,
+                            R_cap, Ldist, Rdist, udist])
+        df.loc[len(df)] = [int(line[0]), L_word, R_word, L_word_len3, L_cap,
+                            R_cap, Ldist, Rdist, udist, line[2]]
+
+df = df[['L_word_len3', 'L_cap', 'R_cap', 'L_dist', 'R_dist', 'udist', 'label']]
+df['L_word_len3'] = pd.Categorical(df.L_word_len3).codes
+df['L_cap'] = pd.Categorical(df.L_cap).codes
+df['R_cap'] = pd.Categorical(df.R_cap).codes
+df['label'] = pd.Categorical(df.label).codes
+y = df.pop('label')
+X = df
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state = 100)
+
+predictions = clf.predict(X_test)
+print("Jaccard score:", accuracy_score(y_test, predictions))
