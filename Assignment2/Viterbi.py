@@ -1,6 +1,6 @@
 import re
 from collections import Counter
-from gettext import find
+# from gettext import find
 import sys
 
 word_tag = {}
@@ -9,6 +9,12 @@ tag_uni = {}
 tag_tag = {}
 
 tag_only = []
+full_test = ''
+
+def probabilties():
+
+    return 0
+
 
 def viterbi(line):
     return
@@ -16,11 +22,14 @@ def viterbi(line):
 
 def strip_tags(actual_line):
     test_line = ''
-    pattern =
     for a in range(len(actual_line)):
+        index = actual_line[a].find("/")
+        if index > 0:
+            test_line = actual_line[a][0:index]
 
+        global full_test
+        full_test += " " + test_line
 
-    viterbi(test_line)
 
 def preprocess(line_list):
     line_list.insert(0, '<s>')
@@ -34,7 +43,6 @@ def preprocess(line_list):
 
         elif len(back_slash) == 1:
             line_list[a] = line_list[a].replace('\\/', '/')
-    dict_vals(line_list)
 
 
 def dict_vals(dict_line):
@@ -77,10 +85,17 @@ while len(sys.argv) > 1:  # so long as arguments include files to open
             for line in file:  # preprocessing of file
                 line = line.split()
                 preprocess(line)
+                dict_vals(line)
             tag_tag = Counter(zip(tag_only, tag_only[1:]))
 
-        elif a == 2: #test
-            preprocess(line)
-            strip_tags(line)
+            # probabilties()
 
+        elif a == 2: #test
+            for line in file:  # preprocessing of file
+                line = line.split()
+                preprocess(line)
+                strip_tags(line)
+            viterbi(full_test)
+
+    # print("word_tag =\n{} \ntag_uni=\n{} \ntag_tag=\n{}".format(word_tag, tag_uni, tag_tag))
     break
