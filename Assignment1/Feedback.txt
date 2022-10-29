@@ -1,6 +1,4 @@
-	12
-Name	Greer, Tamara
-Score	60
+Score	60 / 70
 Used External Libraries?	Note for future assignments: ['metrics', 'preprocessing', 'model_selection'] are considered external libraries. Only sklearn DecisionTree was supposed to be used. Anything else can be coded using core Python libraries itself.
 Text Submissions	All Good
 System Line Good?	All Good

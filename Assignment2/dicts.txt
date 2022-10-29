@@ -1,0 +1,4 @@
+word and tag in dictionary
+count of tag in dictionary -- mcgraw hill included due to a word not being tagged
+
+need tag, tag
