@@ -3,18 +3,29 @@ from collections import Counter
 # from gettext import find
 import sys
 
-word_tag = {}
+word_tag, tag_uni, tag_tag,  tag_only, full_test = {}, {}, {}, [], ''
 
-tag_uni = {}
-tag_tag = {}
+def probabilties(dictionary):
+    probability , element1, element2 = 0.0, " ", " "
+    for key in dictionary.items():
+        element1, element2 = key[0], key[1]
 
-tag_only = []
-full_test = ''
-
-def probabilties():
 
     return 0
 
+
+def find_vals(word1, word2, dictionary):
+    if word1 != '' and word2 != ' ': #bigram search
+        for keys in dictionary:
+            if keys[0] == word1 and keys[1] == word2 and dictionary[keys] < 5: turing_smooth()
+            elif keys[0] == word1 and keys[1] == word2 and dictionary[keys] > 5:
+                return dictionary[keys]
+
+    elif word1 != ' ' and word2 == ' ': #unigram search, assume word1 will be searched word
+        for keys in dictionary:
+            if keys[0] == word2 and dictionary[keys] < 5:
+            elif keys[0] == word2 and dictionary[keys] > 5:
+                return dictionary[keys]
 
 def viterbi(line):
     return
