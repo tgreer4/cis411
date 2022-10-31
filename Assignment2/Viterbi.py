@@ -3,29 +3,27 @@ from collections import Counter
 # from gettext import find
 import sys
 
-word_tag, tag_uni, tag_tag,  tag_only, full_test = {}, {}, {}, [], ''
+word_tag, tag_uni, tag_tag, tag_only, full_test, prob_dict= {}, {}, {}, [], '', {}, {}
+
 
 def probabilties(dictionary):
-    probability , element1, element2 = 0.0, " ", " "
+    element1, element2 = " ", " "
     for key in dictionary.items():
         element1, element2 = key[0], key[1]
+        prob_dict[tuple(element2, element1)] = find_vals(element2, element1, dictionary) / find_vals(element2, '', tag_uni)
 
 
-    return 0
-
-
-def find_vals(word1, word2, dictionary):
+def find_vals(word1, word2, dictionary): #use laplace smoothing
     if word1 != '' and word2 != ' ': #bigram search
         for keys in dictionary:
-            if keys[0] == word1 and keys[1] == word2 and dictionary[keys] < 5: turing_smooth()
-            elif keys[0] == word1 and keys[1] == word2 and dictionary[keys] > 5:
-                return dictionary[keys]
+            if keys[0] == word1 and keys[1] == word2: return dictionary.get(keys)
+            else: return 1
 
     elif word1 != ' ' and word2 == ' ': #unigram search, assume word1 will be searched word
         for keys in dictionary:
-            if keys[0] == word2 and dictionary[keys] < 5:
-            elif keys[0] == word2 and dictionary[keys] > 5:
-                return dictionary[keys]
+            if keys[0] == word1: return dictionary.get(keys)
+            else: return 1
+
 
 def viterbi(line):
     return
@@ -35,8 +33,7 @@ def strip_tags(actual_line):
     test_line = ''
     for a in range(len(actual_line)):
         index = actual_line[a].find("/")
-        if index > 0:
-            test_line = actual_line[a][0:index]
+        if index > 0: test_line = actual_line[a][0:index]
 
         global full_test
         full_test += " " + test_line
@@ -49,40 +46,28 @@ def preprocess(line_list):
         forward_slash = re.findall(r'/', line_list[a])
 
         # deal with tag phrases
-        if len(back_slash) == 1 and len(forward_slash) == 2:
-            line_list[a] = line_list[a].replace('\\/', ' ', 1)
+        if len(back_slash) == 1 and len(forward_slash) == 2: line_list[a] = line_list[a].replace('\\/', ' ', 1)
 
-        elif len(back_slash) == 1:
-            line_list[a] = line_list[a].replace('\\/', '/')
+        elif len(back_slash) == 1: line_list[a] = line_list[a].replace('\\/', '/')
 
 
 def dict_vals(dict_line):
     for a in range(len(dict_line)):
-        # assume that / is always in line
-        temp_line = dict_line[a].split("/")
+        temp_line = dict_line[a].split("/") # assume that / is always in line
 
-        # account for beginning of sentence <s> being by itself
-        if len(temp_line) == 1:
+        if len(temp_line) == 1: # account for beginning of sentence <s> being by itself
             #tag unigram
-            if temp_line[0] in tag_uni:
-                tag_uni[temp_line[0]] += 1
-            else:
-                tag_uni[temp_line[0]] = 1
+            if temp_line[0] in tag_uni: tag_uni[temp_line[0]] += 1
+            else: tag_uni[temp_line[0]] = 1
             global tag_only
             tag_only.append(temp_line[0])
 
         elif len(temp_line) == 2:
-            # tag unigram
-            if temp_line[1] in tag_uni:
-                tag_uni[temp_line[1]] += 1
-            else:
-                tag_uni[temp_line[1]] = 1
+            if temp_line[1] in tag_uni: tag_uni[temp_line[1]] += 1 # tag unigram
+            else: tag_uni[temp_line[1]] = 1
 
-            # word and tag bigram
-            if tuple(temp_line) in word_tag:
-                word_tag[tuple(temp_line)] += 1
-            else:
-                word_tag[tuple(temp_line)] = 1
+            if tuple(temp_line) in word_tag: word_tag[tuple(temp_line)] += 1 # word and tag bigram
+            else: word_tag[tuple(temp_line)] = 1
 
             #make a string of only tags then make bigram of it
             tag_only.append(temp_line[1])
