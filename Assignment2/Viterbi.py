@@ -3,29 +3,37 @@ from collections import Counter
 # from gettext import find
 import sys
 
-word_tag, tag_uni, tag_tag, tag_only, full_test, prob_dict= {}, {}, {}, [], '', {}, {}
+word_tag, tag_uni, tag_tag, tag_only, full_test, prob_dict= {}, {}, {}, [], '', {}
 
 
 def probabilties(dictionary):
     element1, element2 = " ", " "
-    for key in dictionary.items():
+    for key in dictionary:
         element1, element2 = key[0], key[1]
-        prob_dict[tuple(element2, element1)] = find_vals(element2, element1, dictionary) / find_vals(element2, '', tag_uni)
+        prob_dict[key] = find_vals(element2, element1, dictionary) / find_vals(element2, '', tag_uni)
 
 
 def find_vals(word1, word2, dictionary): #use laplace smoothing
-    if word1 != '' and word2 != ' ': #bigram search
+    if word1 != '' and word2 != '': #bigram search
         for keys in dictionary:
-            if keys[0] == word1 and keys[1] == word2: return dictionary.get(keys)
-            else: return 1
+            if keys[0] == word1 and keys[1] == word2:
+                # print("inside if inside for and if\t keys[{}] == {} and keys[{}] == {} -> {}".format(keys[0], word1, keys[1], word2, keys[0] == word1 and keys[1] == word2))
+                return dictionary.get(keys)
+            else:
+                # print("inside else inside for and if\t keys[{}] == {} and keys[{}] == {} -> {}".format(keys[0], word1, keys[1], word2, keys[0] == word1 and keys[1] == word2))
+                return 1
 
-    elif word1 != ' ' and word2 == ' ': #unigram search, assume word1 will be searched word
+    elif word1 != '' and word2 == '': #unigram search, assume word1 will be searched word
         for keys in dictionary:
-            if keys[0] == word1: return dictionary.get(keys)
-            else: return 1
+            if keys[0] == word1:
+                # print("inside if inside for and elif\t keys[{}] == {} and keys[{}] == {} -> {}".format(keys[0], word1, keys[1], word2, keys[0] == word1 and keys[1] == word2))
+                return dictionary.get(keys)
+            else:
+                # print("inside else inside for and elif\t keys[{}] == {} and keys[{}] == {} -> {}".format(keys[0], word1, keys[1], word2,keys[0] == word1 and keys[1] == word2))
+                return 1
 
 
-def viterbi(line):
+def viterbi():
     return
 
 
@@ -82,6 +90,8 @@ while len(sys.argv) > 1:  # so long as arguments include files to open
                 line = line.split()
                 preprocess(line)
                 dict_vals(line)
+            probabilties(word_tag)
+            probabilties(tag_tag)
             tag_tag = Counter(zip(tag_only, tag_only[1:]))
 
             # probabilties()
@@ -94,4 +104,5 @@ while len(sys.argv) > 1:  # so long as arguments include files to open
             viterbi(full_test)
 
     # print("word_tag =\n{} \ntag_uni=\n{} \ntag_tag=\n{}".format(word_tag, tag_uni, tag_tag))
+    # print("prob_dict =\n{}".format(prob_dict))
     break
