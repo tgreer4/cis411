@@ -6,3 +6,13 @@ This program is not complete. I had a very hard time obtaining the data in ways 
     4) Add word | tag as a tuple to the a dictionary called word_tag or incremented the count for that tuple
     5) Each tag at location 1 wsa then appended to an empty list in order it was read in so a bigram of tags could be made
     6) obtained the probabilities for word
+        -This is where I got stuck. Inside find_vals the comparison to match word/tag to the dictionary was not returning the right values. I returned 1 to
+        account for Laplace Smoothing.
+    7) move on to testing data
+    8) strip sentence of tags (works) while also keeping the actual tags to compare later for accuracy which I used a dictionary with word as key and a list containing [guessed tag, actual tag]
+    9) send lines to viterbi to predict tags
+        -Did not have time to complete. Had issues accessing a long string string word for word but also accounting for end of sentence
+    10) test accuracy
+
+I did implement the baseline.py as something else to do when I got stuck with Viterbi. I got stuck on finding the maximum count of a tag for a word when I tried
+implementing it as a nested dictionary or as a list inside a dictionary.

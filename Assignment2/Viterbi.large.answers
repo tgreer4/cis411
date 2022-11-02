@@ -1,8 +1,1 @@
-This program is not complete. I had a very hard time obtaining the data in ways needed, especially tag|tag. Below is a list of my process:
-    1) Read in each line from file and the first file would be used for training while 2nd was for testing
-    2) Process the training file and get rid of extra slashes for tag phrases
-    3) split each line up by spaces, adding <s> to the beginning (assumed beginning of sentence was each  new line) and then by /
-    4) assumed the second split resulted in a 2 item list, then added the tag at location 1 to a tag dict incremented the count for that tag
-    4) Add word | tag as a tuple to the a dictionary called word_tag or incremented the count for that tuple
-    5) Each tag at location 1 wsa then appended to an empty list in order it was read in so a bigram of tags could be made
-    6) obtained the probabilities for word
+Viterbi for large data set was not attempted due to issues with the initial Viterbi question.
