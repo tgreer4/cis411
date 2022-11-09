@@ -1,7 +1,7 @@
 import sys
 import math
+import random
 
-preprocess_data= []
 sense, folds = {}, {1:[], 2: [], 3: [], 4: [], 5: []}
 count_instance = 0
 
@@ -12,6 +12,14 @@ count_instance = 0
         #     senseid = lines[begin_index:-1]
         #     if senseid in sense: sense[senseid] += 1
         #     else: sense[senseid] = 1
+def wsd():
+    test_vals = []
+    for a in range(5):
+        test_fold = random.randrange(1, 5)
+        while test_fold in test_vals: #use a random num generator and pop it into a list of folds already used
+            test_fold = random.randrange(1, 5)
+        test_vals.pop(test_fold)
+
 
 
 def populate_folds(fold_size,text):
@@ -26,29 +34,9 @@ def populate_folds(fold_size,text):
                 previous_index = iterator
 
 
-
 while len(sys.argv) > 1:  # so long as arguments include files to open, assume only 1
     file = open(sys.argv[1])
     text = file.readlines()
     for iterator in range(3, len(text), 7): count_instance += 1
     fold_size = math.ceil(count_instance / 5)
     populate_folds(fold_size, text)
-
-
-# text = [
-#     'something', 'something', 'something', 'something', 'something', 'something'
-#         0            1              2           3           4           5
-# ]
-#
-# folds = {
-#     1: [list[0], list2[1]]
-#     2: [list2[2], list2[[3]]]
-#     3: [list2[4], list3[5]] }
-#
-# NOT
-#
-# folds = {
-#     1: [list[0], list2[1]]
-#     2: [list2[0], list2[[1]]]
-#     3: [list2[0], list3[1]]
-# }
