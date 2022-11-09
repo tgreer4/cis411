@@ -5,39 +5,50 @@ preprocess_data= []
 sense, folds = {}, {1:[], 2: [], 3: [], 4: [], 5: []}
 count_instance = 0
 
-def preprocess(list, list2):
-    for lines in list:
-        begin_index = lines.find('%')
+# def preprocess(list):
+#     for lines in list:
+        # begin_index = lines.find('%') #find senseid for count of senses
+        # if begin_index > 0:
+        #     senseid = lines[begin_index:-1]
+        #     if senseid in sense: sense[senseid] += 1
+        #     else: sense[senseid] = 1
 
-        if begin_index > 0: #counts of senses
-            senseid = lines[begin_index:len(lines)]
-            if senseid in sense: sense[senseid] += 1
-            else: sense[senseid] = 1
 
-        begin_index = lines.find('<context>')
-        if begin_index > 0:
-            list2.pop(list[begin_index+1]) #
-
-def five_fold(list):
-    for lines in list:
-        begin_index = lines.find('<context>')
-        if begin_index > 0:
-            global count_instance
-            count_instance += 1
-    fold_size =  math.ceill(count_instance / 5)
-    temp = fold_size
+def populate_folds(fold_size,text):
     global folds
-    for key in folds: #setting size of folds
-        folds[key] = range(temp)
-        remaining = count_instance - fold_size
-        if remaining < fold_size:
-            temp = remaining
+    size_tracker = fold_size
 
+    for key in range(len(folds)):
+        for iterator in range(3, len(text), 7):
+            if iterator == 4 and previous_index > (4+fold_size):
+                folds[key].pop(text[iterator])
+                size_tracker -= 1 #make sure number of instances within a fold are correct
+                previous_index = iterator
 
-def populate_folds(fold, list2, ):
 
 
 while len(sys.argv) > 1:  # so long as arguments include files to open, assume only 1
     file = open(sys.argv[1])
     text = file.readlines()
-    preprocess(text, preprocess_data)
+    for iterator in range(3, len(text), 7): count_instance += 1
+    fold_size = math.ceil(count_instance / 5)
+    populate_folds(fold_size, text)
+
+
+# text = [
+#     'something', 'something', 'something', 'something', 'something', 'something'
+#         0            1              2           3           4           5
+# ]
+#
+# folds = {
+#     1: [list[0], list2[1]]
+#     2: [list2[2], list2[[3]]]
+#     3: [list2[4], list3[5]] }
+#
+# NOT
+#
+# folds = {
+#     1: [list[0], list2[1]]
+#     2: [list2[0], list2[[1]]]
+#     3: [list2[0], list3[1]]
+# }
