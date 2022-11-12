@@ -11,15 +11,19 @@ stop_words = ['ourselves', 'hers', 'between', 'yourself', 'but', 'again', 'there
 
 unwanted = ['</context>', '</instance>', '<context>']
 
-def preprocess(textInput):
-    pattern = '\n'
-    for line in textInput:
-        line = re.sub(pattern, '', line)
-        # print("line after sub:",line)
-        if line in unwanted:
-            index = textInput.index(line)
-            textInput[index] = textInput[index].replace(line, '')
-    # for iterator in range(3, len(text), 7): count_instance += 1
+
+# for iterator in range(3, len(text), 7): count_instance += 1
+
+# def preprocess(textInput):
+
+    # pattern = '\n'
+    # for line in textInput:
+    #     line = re.sub(pattern, '', line)
+    #     print("line after sub:",line)
+    #     if line in unwanted:
+    #         line = line.replace(line, '')
+
+    # print("textInput: ",textInput)
 
 
 def word_bags(fold_list):
@@ -73,14 +77,14 @@ def populate_folds(fold_size,text):
             if instance_index > -1:
                 split_text = text[iterator].split()
                 instance_index = split_text[0].find('.')
-                temp_list.pop(split_text[0][instance_index:-1])
+                temp_list.append(split_text[0][instance_index:-1])
 
             #fix
             instance_sentence = iterator.find('<') #obtaining
-            if instance_sentence > -1: temp_list.pop(text[iterator])
+            if instance_sentence > -1: temp_list.append(text[iterator])
 
             correct_sense_i = iterator.find('%')
-            if correct_sense_i > -1: temp_list.pop(text[iterator][correct_sense_i:-3])
+            if correct_sense_i > -1: temp_list.append(text[iterator][correct_sense_i:-3])
 
             folds[key].pop(temp_list)
 
@@ -93,7 +97,9 @@ def populate_folds(fold_size,text):
 while len(sys.argv) > 1:  # so long as arguments include files to open, assume only 1
     file = open(sys.argv[1])
     text = file.readlines()
-    preprocess(text)
+    # preprocess(text)
+    # text.remove('<context>')
+    print("text: ",text)
     break
 
     #
