@@ -1,0 +1,15 @@
+The program itself is complete and running. Below is a list of my process:
+    1) Read in the whole file at once, making it a large list of each line
+    2) Process the training file and get rid of extra lines not needed, the 1st, 3rd, 5th, and 6th line. This resulted in a list with double the instances
+    3) Find fold size by dividing the above list by 2, then again by 5 and rounding up
+    4) Populating the folds by keeping track of the number of instances within a fold and making sure the next fold starts off from where the previous fold ended. Used a dictionary with instance id as key and the actual sense as the value.
+    4) Used a double loop to train and test the data, if the inner loop value matched the outer loop then its assumed that that will be the test fold. Otherwise, the fold would be used to train the algorithm.
+    5) The test fold was sent to the wsd algorithm where stop words were removed adn non-stop words were sent to the predict_sense function, which did the math portion of wsd. The predicted sense was sent to a dictionary called pro_sense that had instance id as key and predicted sense as value.
+    6) Validated the prediction using true_sense and prob_sense.
+
+ Note: In the preprocessing function, I took out the head word and used just the number, same applies for the actual sense.
+
+Errors:
+    1) A math error occurred since I have a low correctness percentage. I tried to do as much calculations in one line to avoid rounding errors but I was not successful.
+    2) There's an error in my code and how I added words to senses. I've been seeing errors about how I can't add an int to a string. Hardcoding the program to match the plant.wsd format would be the problem if the otehr files do not match plant.wsd
+    3) The way I kept all the values and such (alot of copying and duplicating) also played a part in a low correctness. An instance ID could have been miswritten or the dictionary of words was not coded correctly. I noticed that the dictionary of word bags had bery low counts for words.
